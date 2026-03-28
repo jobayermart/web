@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Jobayer Mart</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey:#D4860A; --honey-light:#F2A830; --bark:#3B2008;
+    --cream:#FDF6EC; --leaf:#4A7C3F; --red:#C0392B;
+    --bg:#F5F5F5; --white:#FFFFFF; --border:#E5E0D8;
+    --text:#1A1A1A; --muted:#777;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);}
+
+  /* ── LOGIN PAGE ── */
+  .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bark);}
+  .login-box{background:var(--white);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .login-logo{text-align:center;margin-bottom:28px;}
+  .login-logo h2{font-family:'Hind Siliguri',sans-serif;font-size:1.6rem;font-weight:700;color:var(--bark);}
+  .login-logo p{font-size:.85rem;color:var(--muted);margin-top:4px;}
+  .login-field{margin-bottom:16px;}
+  .login-field label{display:block;font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .login-field input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.95rem;outline:none;transition:border-color .2s;}
+  .login-field input:focus{border-color:var(--honey);}
+  .login-btn{width:100%;background:var(--bark);color:#fff;border:none;border-radius:12px;padding:14px;font-size:1rem;font-family:'Hind Siliguri',sans-serif;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s;}
+  .login-btn:hover{background:#5a3412;}
+  .login-err{background:#fdf0ef;border:1px solid #f5c6c2;border-radius:8px;padding:10px 14px;font-size:.85rem;color:var(--red);margin-bottom:14px;display:none;}
+  .login-err.show{display:block;}
+
+  /* ── ADMIN LAYOUT ── */
+  .admin-wrap{display:none;min-height:100vh;flex-direction:column;}
+  .admin-wrap.show{display:flex;}
+
+  .topbar{background:var(--bark);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .topbar-brand{font-family:'Hind Siliguri',sans-serif;font-size:1.1rem;font-weight:700;color:var(--honey-light);}
+  .topbar-brand span{color:rgba(255,255,255,.5);font-size:.85rem;font-weight:400;margin-left:8px;}
+  .logout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:7px 16px;font-size:.85rem;cursor:pointer;transition:background .2s;}
+  .logout-btn:hover{background:rgba(255,255,255,.2);}
+
+  .admin-body{flex:1;padding:28px 24px;max-width:960px;margin:0 auto;width:100%;}
+
+  /* STATS ROW */
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
+  .stat-card{background:var(--white);border-radius:14px;padding:18px 20px;border:1px solid var(--border);}
+  .stat-num{font-size:1.8rem;font-weight:700;color:var(--bark);}
+  .stat-label{font-size:.8rem;color:var(--muted);margin-top:2px;}
+
+  /* ADD PRODUCT SECTION */
+  .section-title{font-size:1.05rem;font-weight:700;color:var(--bark);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .add-form{background:var(--white);border-radius:16px;padding:24px;border:1px solid var(--border);margin-bottom:28px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .form-grid .full{grid-column:1/-1;}
+  .f-label{display:block;font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:5px;}
+  .f-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;background:var(--bg);}
+  .f-input:focus{border-color:var(--honey);background:#fff;}
+  .f-select{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.9rem;outline:none;background:var(--bg);cursor:pointer;}
+  .toggle-row{display:flex;align-items:center;gap:10px;padding:10px 0;}
+  .toggle{width:42px;height:24px;background:#ddd;border-radius:50px;position:relative;cursor:pointer;transition:background .2s;border:none;flex-shrink:0;}
+  .toggle.on{background:var(--leaf);}
+  .toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;}
+  .toggle.on::after{left:21px;}
+  .toggle-label{font-size:.85rem;color:var(--text);}
+
+  /* IMAGE UPLOAD */
+  .img-upload-area{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--bg);}
+  .img-upload-area:hover{border-color:var(--honey);background:#fffbf4;}
+  .img-upload-area input{display:none;}
+  .img-upload-area .upload-icon{font-size:2rem;margin-bottom:8px;}
+  .img-upload-area p{font-size:.85rem;color:var(--muted);}
+  .img-preview{width:100%;height:140px;object-fit:cover;border-radius:10px;display:none;margin-top:10px;}
+
+  /* SUBMIT BTN */
+  .submit-btn{background:var(--bark);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-size:.95rem;font-family:'Hind Siliguri',sans-serif;font-weight:700;cursor:pointer;transition:background .2s;margin-top:16px;}
+  .submit-btn:hover{background:#5a3412;}
+  .submit-btn:disabled{background:#aaa;cursor:not-allowed;}
+
+  /* PRODUCT LIST */
+  .product-list{display:flex;flex-direction:column;gap:12px;}
+  .p-row{background:var(--white);border-radius:14px;padding:16px 18px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;transition:box-shadow .2s;}
+  .p-row:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);}
+  .p-thumb{width:60px;height:60px;border-radius:10px;object-fit:cover;background:var(--bg);flex-shrink:0;}
+  .p-info{flex:1;min-width:0;}
+  .p-name{font-size:.95rem;font-weight:600;color:var(--bark);margin-bottom:2px;}
+  .p-meta{font-size:.8rem;color:var(--muted);}
+  .p-price{font-size:1rem;font-weight:700;color:var(--honey);white-space:nowrap;}
+  .p-actions{display:flex;gap:8px;flex-shrink:0;}
+  .edit-btn{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--bark);transition:all .15s;}
+  .edit-btn:hover{border-color:var(--honey);color:var(--honey);}
+  .del-btn-row{background:#fdf0ef;border:1px solid #f5c6c2;border-radius:8px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--red);transition:all .15s;}
+  .del-btn-row:hover{background:#fde0de;}
+  .combo-tag{background:var(--honey);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;}
+
+  /* DRAG HANDLE */
+  .drag-handle{color:#ccc;font-size:1.2rem;cursor:grab;flex-shrink:0;padding:0 4px;}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--white);border-radius:20px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+  .modal-title{font-size:1.1rem;font-weight:700;color:var(--bark);margin-bottom:20px;}
+  .modal-actions{display:flex;gap:10px;margin-top:20px;}
+  .cancel-btn{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:11px;font-size:.9rem;cursor:pointer;font-family:'Inter',sans-serif;}
+  .save-btn{flex:1;background:var(--bark);color:#fff;border:none;border-radius:10px;padding:11px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Hind Siliguri',sans-serif;}
+  .save-btn:hover{background:#5a3412;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;border-radius:50px;padding:12px 24px;font-size:.9rem;z-index:999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* LOADING */
+  .list-loading{text-align:center;padding:40px;color:var(--muted);}
+  .spinner{width:32px;height:32px;border:3px solid rgba(212,134,10,.2);border-top-color:var(--honey);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media(max-width:600px){
+    .form-grid{grid-template-columns:1fr}
+    .form-grid .full{grid-column:1}
+    .p-actions{flex-direction:column}
+    .admin-body{padding:16px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN PAGE ── -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <h2>🍯 Jobayer Mart</h2>
+      <p>Admin Panel — লগইন করুন</p>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-field">
+      <label>ইমেইল</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com">
+    </div>
+    <div class="login-field">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">লগইন করুন</button>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="admin-wrap" id="adminWrap">
+
+  <div class="topbar">
+    <div class="topbar-brand">🍯 Jobayer Mart <span>Admin</span></div>
+    <button class="logout-btn" onclick="doLogout()">লগআউট</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">মোট পণ্য</div></div>
+      <div class="stat-card"><div class="stat-num" id="statCombo">—</div><div class="stat-label">কম্বো প্যাক</div></div>
+    </div>
+
+    <!-- Add Product -->
+    <div class="section-title">➕ নতুন পণ্য যোগ করুন</div>
+    <div class="add-form">
+      <div class="form-grid">
+        <div>
+          <label class="f-label">পণ্যের নাম *</label>
+          <input class="f-input" id="aName" placeholder="যেমন: সুন্দরবনের মধু">
+        </div>
+        <div>
+          <label class="f-label">মূল্য (টাকা) *</label>
+          <input class="f-input" type="number" id="aPrice" placeholder="1800">
+        </div>
+        <div>
+          <label class="f-label">একক *</label>
+          <input class="f-input" id="aUnit" placeholder="কেজি / প্যাক / ক্রেট">
+        </div>
+        <div>
+          <label class="f-label">ক্রম (order)</label>
+          <input class="f-input" type="number" id="aOrder" placeholder="1, 2, 3...">
+        </div>
+        <div class="full">
+          <label class="f-label">বিবরণ</label>
+          <input class="f-input" id="aDesc" placeholder="পণ্যের ছোট বিবরণ">
+        </div>
+        <div class="full">
+          <label class="f-label">পণ্যের ছবি (URL)</label>
+          <input class="f-input" id="aImage" placeholder="https://... অথবা ফাইলের নাম যেমন: honey-sundarban.jpg">
+          <p style="font-size:.75rem;color:var(--muted);margin-top:4px;">Cloudinary বা যেকোনো image URL দিন</p>
+        </div>
+        <div class="full">
+          <div class="toggle-row">
+            <button class="toggle" id="comboToggle" onclick="toggleCombo()"></button>
+            <span class="toggle-label">এটি কম্বো প্যাক</span>
+          </div>
+        </div>
+        <div class="full" id="comboFields" style="display:none;">
+          <label class="f-label">কম্বোতে কী কী আছে (প্রতি লাইনে একটি)</label>
+          <textarea class="f-input" id="aComboItems" rows="3" placeholder="🌳 সুন্দরবনের মধু (১ কেজি)&#10;🖤 কালোজিরা ফুলের মধু (১ কেজি)" style="resize:vertical;"></textarea>
+          <label class="f-label" style="margin-top:10px;">সাশ্রয় টেক্সট</label>
+          <input class="f-input" id="aComboSavings" placeholder="সাশ্রয় ৳৩০০ (আলাদায় ৳৩,৩০০)">
+        </div>
+      </div>
+      <button class="submit-btn" id="addBtn" onclick="addProduct()">✅ পণ্য যোগ করুন</button>
+    </div>
+
+    <!-- Product List -->
+    <div class="section-title">📦 সকল পণ্য</div>
+    <div id="productList">
+      <div class="list-loading"><div class="spinner"></div><p>লোড হচ্ছে...</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── EDIT MODAL ── -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title">✏️ পণ্য সম্পাদনা করুন</div>
+    <input type="hidden" id="editId">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label class="f-label">পণ্যের নাম</label>
+        <input class="f-input" id="editName">
+      </div>
+      <div>
+        <label class="f-label">মূল্য (টাকা)</label>
+        <input class="f-input" type="number" id="editPrice">
+      </div>
+      <div>
+        <label class="f-label">একক</label>
+        <input class="f-input" id="editUnit">
+      </div>
+      <div>
+        <label class="f-label">বিবরণ</label>
+        <input class="f-input" id="editDesc">
+      </div>
+      <div>
+        <label class="f-label">ছবির URL</label>
+        <input class="f-input" id="editImage">
+      </div>
+      <div>
+        <label class="f-label">ক্রম (order)</label>
+        <input class="f-input" type="number" id="editOrder">
+      </div>
+      <div>
+        <div class="toggle-row">
+          <button class="toggle" id="editComboToggle" onclick="toggleEditCombo()"></button>
+          <span class="toggle-label">কম্বো প্যাক</span>
+        </div>
+      </div>
+      <div id="editComboFields" style="display:none;">
+        <label class="f-label">কম্বো আইটেম</label>
+        <textarea class="f-input" id="editComboItems" rows="3" style="resize:vertical;"></textarea>
+        <label class="f-label" style="margin-top:10px;">সাশ্রয় টেক্সট</label>
+        <input class="f-input" id="editComboSavings">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal()">বাতিল</button>
+      <button class="save-btn" onclick="saveEdit()">💾 সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy }
+                                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDiVT4lKNlypAMlOrE2GQ0Vhfb7oFKun4E",
+  authDomain: "jobayermart.firebaseapp.com",
+  projectId: "jobayermart",
+  storageBucket: "jobayermart.firebasestorage.app",
+  messagingSenderId: "189985592449",
+  appId: "1:189985592449:web:33d01bdaaddcfda703a980"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let isComboAdd  = false;
+let isComboEdit = false;
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById('loginPage').style.display  = 'none';
+    document.getElementById('adminWrap').classList.add('show');
+    loadProducts();
+  } else {
+    document.getElementById('loginPage').style.display  = 'flex';
+    document.getElementById('adminWrap').classList.remove('show');
+  }
+});
+
+// ── LOGIN ──
+window.doLogin = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.classList.remove('show');
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (e) {
+    errEl.textContent = 'ইমেইল বা পাসওয়ার্ড ভুল হয়েছে।';
+    errEl.classList.add('show');
+  }
+};
+
+window.doLogout = async function() {
+  await signOut(auth);
+};
+
+// ── COMBO TOGGLE ──
+window.toggleCombo = function() {
+  isComboAdd = !isComboAdd;
+  document.getElementById('comboToggle').classList.toggle('on', isComboAdd);
+  document.getElementById('comboFields').style.display = isComboAdd ? 'block' : 'none';
+};
+
+window.toggleEditCombo = function() {
+  isComboEdit = !isComboEdit;
+  document.getElementById('editComboToggle').classList.toggle('on', isComboEdit);
+  document.getElementById('editComboFields').style.display = isComboEdit ? 'block' : 'none';
+};
+
+// ── LOAD PRODUCTS ──
+async function loadProducts() {
+  const listEl = document.getElementById('productList');
+  listEl.innerHTML = '<div class="list-loading"><div class="spinner"></div><p>লোড হচ্ছে...</p></div>';
+  try {
+    const q    = query(collection(db, 'products'), orderBy('order', 'asc'));
+    const snap = await getDocs(q);
+    const products = [];
+    snap.forEach(d => products.push({ id: d.id, ...d.data() }));
+    renderList(products);
+    document.getElementById('statTotal').textContent = products.length;
+    document.getElementById('statCombo').textContent = products.filter(p => p.isCombo).length;
+  } catch (e) {
+    listEl.innerHTML = `<p style="color:var(--red);padding:20px">লোড ব্যর্থ: ${e.message}</p>`;
+  }
+}
+
+function renderList(products) {
+  const listEl = document.getElementById('productList');
+  if (!products.length) {
+    listEl.innerHTML = '<p style="text-align:center;padding:40px;color:var(--muted)">কোনো পণ্য নেই। উপরে যোগ করুন।</p>';
+    return;
+  }
+  listEl.innerHTML = '';
+  const container = document.createElement('div');
+  container.className = 'product-list';
+  products.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'p-row';
+    row.innerHTML = `
+      <img class="p-thumb" src="${p.image||''}" alt="${p.name}" onerror="this.style.opacity='.3'">
+      <div class="p-info">
+        <div class="p-name">${p.name}${p.isCombo ? '<span class="combo-tag">কম্বো</span>' : ''}</div>
+        <div class="p-meta">${p.unit} · ক্রম: ${p.order ?? '—'}</div>
+      </div>
+      <div class="p-price">৳${Number(p.price).toLocaleString('en-IN')}</div>
+      <div class="p-actions">
+        <button class="edit-btn" onclick="openEdit('${p.id}')">✏️ এডিট</button>
+        <button class="del-btn-row" onclick="deleteProduct('${p.id}','${p.name}')">🗑 মুছুন</button>
+      </div>`;
+    container.appendChild(row);
+  });
+  listEl.appendChild(container);
+}
+
+// ── ADD PRODUCT ──
+window.addProduct = async function() {
+  const name  = document.getElementById('aName').value.trim();
+  const price = +document.getElementById('aPrice').value;
+  const unit  = document.getElementById('aUnit').value.trim();
+  const image = document.getElementById('aImage').value.trim();
+  const desc  = document.getElementById('aDesc').value.trim();
+  const order = +document.getElementById('aOrder').value || 99;
+
+  if (!name || !price || !unit) { showToast('❌ নাম, মূল্য ও একক আবশ্যক!'); return; }
+
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true; btn.textContent = 'যোগ হচ্ছে...';
+
+  const data = { name, price, unit, image, description: desc, order, isCombo: isComboAdd };
+  if (isComboAdd) {
+    data.comboItems   = document.getElementById('aComboItems').value.trim();
+    data.comboSavings = document.getElementById('aComboSavings').value.trim();
+  }
+
+  try {
+    await addDoc(collection(db, 'products'), data);
+    showToast('✅ পণ্য যোগ হয়েছে!');
+    clearAddForm();
+    loadProducts();
+  } catch (e) {
+    showToast('❌ ত্রুটি: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = '✅ পণ্য যোগ করুন';
+};
+
+function clearAddForm() {
+  ['aName','aPrice','aUnit','aImage','aDesc','aOrder','aComboItems','aComboSavings'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  isComboAdd = false;
+  document.getElementById('comboToggle').classList.remove('on');
+  document.getElementById('comboFields').style.display = 'none';
+}
+
+// ── EDIT ──
+let allProducts = [];
+
+window.openEdit = async function(id) {
+  try {
+    const q    = query(collection(db, 'products'), orderBy('order','asc'));
+    const snap = await getDocs(q);
+    snap.forEach(d => { if (d.id === id) {
+      const p = d.data();
+      document.getElementById('editId').value          = id;
+      document.getElementById('editName').value        = p.name || '';
+      document.getElementById('editPrice').value       = p.price || '';
+      document.getElementById('editUnit').value        = p.unit || '';
+      document.getElementById('editDesc').value        = p.description || '';
+      document.getElementById('editImage').value       = p.image || '';
+      document.getElementById('editOrder').value       = p.order ?? '';
+      document.getElementById('editComboItems').value  = p.comboItems || '';
+      document.getElementById('editComboSavings').value= p.comboSavings || '';
+      isComboEdit = !!p.isCombo;
+      document.getElementById('editComboToggle').classList.toggle('on', isComboEdit);
+      document.getElementById('editComboFields').style.display = isComboEdit ? 'block' : 'none';
+    }});
+    document.getElementById('editModal').classList.add('show');
+  } catch(e) { showToast('❌ লোড ব্যর্থ'); }
+};
+
+window.closeModal = function() {
+  document.getElementById('editModal').classList.remove('show');
+};
+
+window.saveEdit = async function() {
+  const id    = document.getElementById('editId').value;
+  const name  = document.getElementById('editName').value.trim();
+  const price = +document.getElementById('editPrice').value;
+  const unit  = document.getElementById('editUnit').value.trim();
+  const image = document.getElementById('editImage').value.trim();
+  const desc  = document.getElementById('editDesc').value.trim();
+  const order = +document.getElementById('editOrder').value || 99;
+
+  if (!name || !price || !unit) { showToast('❌ নাম, মূল্য ও একক আবশ্যক!'); return; }
+
+  const data = { name, price, unit, image, description: desc, order, isCombo: isComboEdit };
+  if (isComboEdit) {
+    data.comboItems   = document.getElementById('editComboItems').value.trim();
+    data.comboSavings = document.getElementById('editComboSavings').value.trim();
+  }
+
+  try {
+    await updateDoc(doc(db, 'products', id), data);
+    showToast('✅ পরিবর্তন সেভ হয়েছে!');
+    closeModal();
+    loadProducts();
+  } catch (e) {
+    showToast('❌ সেভ ব্যর্থ: ' + e.message);
+  }
+};
+
+// ── DELETE ──
+window.deleteProduct = async function(id, name) {
+  if (!confirm(`"${name}" মুছে ফেলবেন?`)) return;
+  try {
+    await deleteDoc(doc(db, 'products', id));
+    showToast('🗑 পণ্য মুছে গেছে');
+    loadProducts();
+  } catch (e) {
+    showToast('❌ মুছতে ব্যর্থ');
+  }
+};
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
