@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobayer Mart – খাঁটি প্রাকৃতিক পণ্য</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey:#D4860A; --honey-light:#F2A830; --bark:#3B2008;
+    --cream:#FDF6EC; --leaf:#4A7C3F; --leaf-light:#6EA862;
+    --text:#2C1A0E; --muted:#8B6A4A; --white:#FFFDF8;
+    --err:#C0392B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);color:var(--text);font-family:'Hind Siliguri',sans-serif;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+
+  /* ── HEADER ── */
+  header{background:var(--bark);position:relative;overflow:hidden;}
+  header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--honey),var(--honey-light),var(--leaf),var(--honey-light),var(--honey));}
+  .hex-bg{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(212,134,10,.12) 0%,transparent 50%),radial-gradient(circle at 80% 30%,rgba(74,124,63,.10) 0%,transparent 45%);pointer-events:none;}
+  .header-inner{max-width:900px;margin:0 auto;padding:48px 24px 52px;text-align:center;position:relative;z-index:1;animation:fadeUp .7s ease both;}
+  .brand-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(242,168,48,.3);border-radius:50px;padding:6px 18px;margin-bottom:20px;}
+  .brand-badge::before{content:'🍯';font-size:16px;}
+  .brand-badge span{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--honey-light);font-weight:500;}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,8vw,4.2rem);color:var(--white);letter-spacing:-1px;line-height:1.1;margin-bottom:12px;}
+  h1 em{font-style:normal;color:var(--honey-light);}
+  .tagline{color:rgba(255,255,255,.55);font-size:1rem;font-weight:300;letter-spacing:1px;margin-bottom:32px;}
+  .contacts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  .contact-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:9px 18px;text-decoration:none;transition:all .25s ease;}
+  .contact-pill:hover{background:rgba(212,134,10,.25);border-color:var(--honey);transform:translateY(-2px);}
+  .contact-pill .icon{font-size:16px;}
+  .contact-pill .label{font-size:13px;color:rgba(255,255,255,.75);font-weight:400;}
+  .contact-pill .value{font-size:13px;color:var(--white);font-weight:600;}
+
+  /* ── SECTION HEAD ── */
+  .section-head{text-align:center;padding:56px 24px 36px;position:relative;z-index:1;}
+  .section-head h2{font-size:clamp(1.5rem,4vw,2rem);font-weight:700;color:var(--bark);margin-bottom:8px;}
+  .section-head h2 span{color:var(--honey);}
+  .section-head p{color:var(--muted);font-size:.95rem;font-weight:300;}
+  .divider{width:60px;height:3px;background:linear-gradient(90deg,var(--honey),var(--honey-light));border-radius:2px;margin:14px auto 0;}
+
+  /* ── BANNER ── */
+  .highlight-banner{max-width:920px;margin:0 auto 24px;padding:0 20px;position:relative;z-index:1;}
+  .highlight-inner{background:linear-gradient(135deg,var(--bark) 0%,#5a3412 100%);border-radius:20px;padding:28px 32px;overflow:hidden;position:relative;}
+  .highlight-inner::after{content:'🍯';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:5rem;opacity:.15;}
+  .highlight-text h3{font-size:1.2rem;color:var(--honey-light);font-weight:700;margin-bottom:6px;}
+  .highlight-text p{font-size:.88rem;color:rgba(255,255,255,.65);font-weight:300;max-width:480px;}
+
+  /* ── GRID ── */
+  .products{max-width:920px;margin:0 auto;padding:0 20px 120px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;position:relative;z-index:1;}
+
+  /* ── CARD ── */
+  .card{background:var(--white);border-radius:20px;border:1.5px solid rgba(212,134,10,.12);overflow:hidden;position:relative;transition:transform .28s ease,box-shadow .28s ease,border-color .2s ease;animation:fadeUp .5s ease both;display:flex;flex-direction:column;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--card-accent,linear-gradient(90deg,var(--honey),var(--honey-light)));z-index:1;}
+  .card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(60,30,8,.12);}
+  .card.in-cart{border-color:rgba(74,124,63,.4);box-shadow:0 4px 20px rgba(74,124,63,.12);}
+  .card.in-cart::before{background:linear-gradient(90deg,var(--leaf),var(--leaf-light));}
+
+  /* product image */
+  .card-img-wrap{width:100%;height:180px;overflow:hidden;background:var(--cream);position:relative;}
+  .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+  .card:hover .card-img-wrap img{transform:scale(1.05);}
+
+  .card-body{padding:18px 18px 18px;display:flex;flex-direction:column;flex:1;}
+  .card-num{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--white);background:rgba(0,0,0,.35);border-radius:20px;padding:2px 8px;z-index:2;}
+  .card h3{font-size:1.05rem;font-weight:700;color:var(--bark);margin-bottom:4px;line-height:1.35;}
+  .card .desc{font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:14px;flex:1;}
+  .price{font-size:1.2rem;font-weight:700;color:var(--honey);margin-bottom:14px;}
+  .price sub{font-size:.7rem;font-weight:400;color:var(--muted);vertical-align:baseline;margin-left:2px;}
+
+  /* ── QTY CONTROL ── */
+  .qty-control{display:inline-flex;align-items:center;background:var(--cream);border-radius:50px;border:1.5px solid rgba(212,134,10,.2);overflow:hidden;}
+  .qty-btn{width:38px;height:38px;background:none;border:none;font-size:1.3rem;color:var(--bark);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease,color .15s ease;font-weight:700;line-height:1;font-family:'Hind Siliguri',sans-serif;}
+  .qty-btn:hover:not(:disabled){background:var(--honey);color:#fff;}
+  .qty-btn:disabled{color:#d0bfaf;cursor:not-allowed;}
+  .qty-num{min-width:34px;text-align:center;font-size:1rem;font-weight:700;color:var(--bark);user-select:none;}
+
+  /* ── FLOATING CART ── */
+  .cart-fab{position:fixed;bottom:28px;right:24px;background:var(--bark);color:#fff;border:none;border-radius:50px;padding:14px 22px;display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Hind Siliguri',sans-serif;font-size:1rem;font-weight:600;box-shadow:0 8px 28px rgba(59,32,8,.35);z-index:100;transition:transform .2s ease,box-shadow .2s ease,opacity .3s ease;opacity:0;pointer-events:none;transform:translateY(10px);}
+  .cart-fab.visible{opacity:1;pointer-events:all;transform:translateY(0);}
+  .cart-fab:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(59,32,8,.4);}
+  .fab-icon{font-size:1.3rem;}
+  .cart-badge{background:var(--honey);color:#fff;border-radius:50px;padding:2px 9px;font-size:.82rem;font-weight:700;min-width:26px;text-align:center;}
+  .cart-total-fab{font-size:.9rem;color:rgba(255,255,255,.75);border-left:1px solid rgba(255,255,255,.2);padding-left:10px;}
+
+  /* ── OVERLAY ── */
+  .cart-overlay{position:fixed;inset:0;background:rgba(30,15,5,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(3px);}
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+
+  /* ── DRAWER ── */
+  .cart-drawer{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-radius:28px 28px 0 0;z-index:300;transform:translateY(100%);transition:transform .38s cubic-bezier(.34,1.56,.64,1);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(30,15,5,.2);}
+  .cart-drawer.open{transform:translateY(0);}
+  .drawer-handle{width:44px;height:5px;background:rgba(0,0,0,.12);border-radius:10px;margin:14px auto 0;flex-shrink:0;}
+  .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 14px;border-bottom:1px solid rgba(212,134,10,.12);flex-shrink:0;}
+  .drawer-title{font-size:1.2rem;font-weight:700;color:var(--bark);display:flex;align-items:center;gap:8px;}
+  .close-btn{width:34px;height:34px;background:var(--cream);border:none;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease;color:var(--bark);}
+  .close-btn:hover{background:#f0e0cc;}
+
+  /* ── VIEWS ── */
+  .drawer-view{display:none;flex-direction:column;flex:1;overflow:hidden;}
+  .drawer-view.active{display:flex;}
+
+  /* CART VIEW */
+  .cart-items{flex:1;overflow-y:auto;padding:12px 24px;}
+  .cart-empty{text-align:center;padding:48px 24px;color:var(--muted);}
+  .cart-empty .empty-icon{font-size:3.5rem;margin-bottom:12px;display:block;}
+  .cart-empty p{font-size:1rem;}
+  .cart-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(212,134,10,.1);animation:fadeUp .25s ease both;}
+  .cart-item:last-child{border-bottom:none;}
+  .item-thumb{width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--cream);}
+  .item-info{flex:1;min-width:0;}
+  .item-name{font-size:.95rem;font-weight:600;color:var(--bark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .item-unit-price{font-size:.78rem;color:var(--muted);}
+  .item-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+  .item-subtotal{font-size:1rem;font-weight:700;color:var(--honey);}
+  .item-qty{display:inline-flex;align-items:center;background:var(--cream);border-radius:50px;border:1.5px solid rgba(212,134,10,.2);overflow:hidden;}
+  .item-qty .qty-btn{width:30px;height:30px;font-size:1rem;}
+  .item-qty .qty-num{min-width:28px;font-size:.9rem;}
+  .del-btn{color:var(--err) !important;}
+
+  /* DRAWER FOOTER */
+  .drawer-footer{padding:16px 24px 28px;border-top:1px solid rgba(212,134,10,.15);background:var(--white);flex-shrink:0;}
+  .total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+  .total-label{font-size:1rem;font-weight:500;color:var(--muted);}
+  .total-amount{font-size:1.6rem;font-weight:700;color:var(--bark);}
+  .primary-btn{width:100%;background:var(--bark);color:#fff;border:none;border-radius:16px;padding:16px;font-family:'Hind Siliguri',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s ease,transform .15s ease;}
+  .primary-btn:hover{background:#5a3412;transform:scale(1.01);}
+
+  /* ── CHECKOUT VIEW ── */
+  .checkout-body{flex:1;overflow-y:auto;padding:20px 24px;}
+  .order-summary{background:var(--cream);border-radius:14px;padding:14px 16px;margin-bottom:20px;border:1px solid rgba(212,134,10,.15);}
+  .order-summary-title{font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+  .summary-item{display:flex;justify-content:space-between;font-size:.88rem;color:var(--text);padding:3px 0;}
+  .summary-item span:last-child{font-weight:600;color:var(--honey);}
+  .summary-total{display:flex;justify-content:space-between;font-size:1rem;font-weight:700;color:var(--bark);padding-top:10px;margin-top:8px;border-top:1px solid rgba(212,134,10,.2);}
+  .form-title{font-size:1rem;font-weight:700;color:var(--bark);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:.85rem;font-weight:600;color:var(--bark);margin-bottom:6px;}
+  .field label span{color:var(--err);margin-left:2px;}
+  .field input,.field textarea{width:100%;background:var(--cream);border:1.5px solid rgba(212,134,10,.2);border-radius:12px;padding:12px 14px;font-family:'Hind Siliguri',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease;}
+  .field input:focus,.field textarea:focus{border-color:var(--honey);box-shadow:0 0 0 3px rgba(212,134,10,.12);}
+  .field input.error,.field textarea.error{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+  .field .err-msg{font-size:.78rem;color:var(--err);margin-top:4px;display:none;}
+  .field .err-msg.show{display:block;}
+  .field textarea{resize:none;height:72px;}
+  .checkout-footer{padding:16px 24px 28px;border-top:1px solid rgba(212,134,10,.15);background:var(--white);flex-shrink:0;display:flex;flex-direction:column;gap:10px;}
+  .back-btn{background:none;border:1.5px solid rgba(59,32,8,.15);border-radius:12px;padding:11px;font-family:'Hind Siliguri',sans-serif;font-size:.9rem;font-weight:600;color:var(--muted);cursor:pointer;transition:border-color .2s ease,color .2s ease;}
+  .back-btn:hover{border-color:var(--honey);color:var(--honey);}
+  .whatsapp-btn{width:100%;background:#25D366;color:#fff;border:none;border-radius:16px;padding:16px;font-family:'Hind Siliguri',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s ease,transform .15s ease;}
+  .whatsapp-btn:hover{background:#1ebe5d;transform:scale(1.01);}
+
+  /* ── FOOTER ── */
+  footer{background:var(--bark);padding:36px 24px;text-align:center;position:relative;z-index:1;}
+  footer::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--honey),var(--honey-light),var(--leaf),var(--honey-light),var(--honey));margin-bottom:32px;}
+  footer p{color:rgba(255,255,255,.4);font-size:.82rem;font-weight:300;}
+  .footer-brand{font-size:1.2rem;font-weight:700;color:var(--honey-light) !important;margin-bottom:8px;}
+
+  /* ── CARD ACCENTS ── */
+  .card:nth-child(1){--card-accent:linear-gradient(90deg,#D4860A,#F2A830);animation-delay:.05s}
+  .card:nth-child(2){--card-accent:linear-gradient(90deg,#1a1a1a,#555);animation-delay:.1s}
+  .card:nth-child(3){--card-accent:linear-gradient(90deg,#f7c948,#ffe88a);animation-delay:.15s}
+  .card:nth-child(4){--card-accent:linear-gradient(90deg,#c8a96e,#e8cc99);animation-delay:.2s}
+  .card:nth-child(5){--card-accent:linear-gradient(90deg,#6aacb8,#a8d8e2);animation-delay:.25s}
+  .card:nth-child(6){--card-accent:linear-gradient(90deg,#d4a843,#f0cc76);animation-delay:.3s}
+  .card:nth-child(7){--card-accent:linear-gradient(90deg,#c4a832,#e8c84a);animation-delay:.35s}
+  .card:nth-child(8){--card-accent:linear-gradient(90deg,#7daa60,#a8cc88);animation-delay:.4s}
+  .card:nth-child(9){--card-accent:linear-gradient(90deg,#D4860A,#1a1a1a);animation-delay:.45s}
+  .card:nth-child(10){--card-accent:linear-gradient(90deg,#1a1a1a,#6aacb8);animation-delay:.5s}
+  .card:nth-child(11){--card-accent:linear-gradient(90deg,#f5a623,#f7c948);animation-delay:.55s}
+
+  /* COMBO BADGE */
+  .combo-badge{position:absolute;top:14px;left:14px;background:var(--honey);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;z-index:2;letter-spacing:.5px;}
+  .combo-savings{font-size:.78rem;color:var(--leaf);font-weight:600;margin-bottom:10px;}
+  .combo-includes{font-size:.78rem;color:var(--muted);margin-bottom:10px;line-height:1.6;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+  .pop{animation:pop .22s ease;}
+
+  @media(max-width:600px){
+    .products{grid-template-columns:1fr 1fr;gap:12px}
+    .card-img-wrap{height:140px}
+    .card-body{padding:12px 12px 14px}
+    .card h3{font-size:.88rem}
+    .price{font-size:1rem}
+    .highlight-inner{padding:20px}
+    .contacts{flex-direction:column;align-items:center}
+    .cart-fab{right:16px;bottom:20px;padding:12px 16px;font-size:.9rem}
+  }
+  @media(max-width:360px){.products{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hex-bg"></div>
+  <div class="header-inner">
+    <div class="brand-badge"><span>খাঁটি ও প্রাকৃতিক পণ্য</span></div>
+    <h1>Jobayer <em>Mart</em></h1>
+    <p class="tagline">প্রকৃতির সেরা উপহার, সরাসরি আপনার দরজায়</p>
+    <div class="contacts">
+      <a class="contact-pill" href="https://wa.me/8801715707316" target="_blank">
+        <span class="icon">💬</span><span class="label">WhatsApp</span><span class="value">01715-707316</span>
+      </a>
+      <a class="contact-pill" href="tel:01711952788">
+        <span class="icon">📞</span><span class="label">কল করুন</span><span class="value">01711-952788</span>
+      </a>
+      <a class="contact-pill" href="mailto:mdjobayer422@gmail.com">
+        <span class="icon">✉️</span><span class="label">Gmail</span><span class="value">mdjobayer422@gmail.com</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="section-head">
+  <h2>আমাদের <span>পণ্যসমূহ</span></h2>
+  <p>সম্পূর্ণ প্রাকৃতিক ও বিশ্বস্ত উৎস থেকে সংগৃহীত</p>
+  <div class="divider"></div>
+</div>
+
+<div class="highlight-banner">
+  <div class="highlight-inner">
+    <div class="highlight-text">
+      <h3>🌿 ১০০% খাঁটি — কোনো ভেজাল নেই</h3>
+      <p>আমাদের সকল পণ্য সরাসরি উৎস থেকে সংগ্রহ করা হয়। মধু, ঘি, তেল — সবকিছুই বিশ্বস্ততার সাথে পরিবেশন করা হয়।</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="products">
+
+  <div class="card" data-id="1">
+    <span class="card-num">০১</span>
+    <div class="card-img-wrap">
+      <img src="honey-sundarban.jpg" alt="সুন্দরবনের মধু">
+    </div>
+    <div class="card-body">
+      <h3>সুন্দরবনের মধু</h3>
+      <p class="desc">বনের গভীর থেকে সংগৃহীত খাঁটি প্রাকৃতিক মধু</p>
+      <div class="price">৳১,৮০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="2">
+    <span class="card-num">০২</span>
+    <div class="card-img-wrap">
+      <img src="honey-blackseed.jpg" alt="কালোজিরা ফুলের মধু">
+    </div>
+    <div class="card-body">
+      <h3>কালোজিরা ফুলের মধু</h3>
+      <p class="desc">ঔষধি গুণসম্পন্ন বিশেষ মধু</p>
+      <div class="price">৳১,৫০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="3">
+    <span class="card-num">০৩</span>
+    <div class="card-img-wrap">
+      <img src="honey-litchi.jpg" alt="লিচু ফুলের মধু">
+    </div>
+    <div class="card-body">
+      <h3>লিচু ফুলের মধু</h3>
+      <p class="desc">হালকা মিষ্টি সুগন্ধযুক্ত লিচু মৌসুমের মধু</p>
+      <div class="price">৳১,২০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="4">
+    <span class="card-num">০৪</span>
+    <div class="card-img-wrap">
+      <img src="ghee-pabna.jpg" alt="পাবনার গাওয়া ঘি">
+    </div>
+    <div class="card-body">
+      <h3>পাবনার দানাদার গাওয়া ঘি</h3>
+      <p class="desc">পাবনার বিখ্যাত ঐতিহ্যবাহী খাঁটি গাওয়া ঘি</p>
+      <div class="price">৳১,৬০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="5">
+    <span class="card-num">০৫</span>
+    <div class="card-img-wrap">
+      <img src="chia-seed.jpg" alt="চিয়া সিড">
+    </div>
+    <div class="card-body">
+      <h3>চিয়া সিড</h3>
+      <p class="desc">পুষ্টিগুণে ভরপুর সুপারফুড</p>
+      <div class="price">৳১,২০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="6">
+    <span class="card-num">০৬</span>
+    <div class="card-img-wrap">
+      <img src="coconut-oil.jpg" alt="নারিকেল তেল">
+    </div>
+    <div class="card-body">
+      <h3>নারিকেল তেল</h3>
+      <p class="desc">খাঁটি ভার্জিন নারিকেল তেল</p>
+      <div class="price">৳১,৩০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="7">
+    <span class="card-num">০৭</span>
+    <div class="card-img-wrap">
+      <img src="mustard-oil.jpg" alt="সরিষার তেল">
+    </div>
+    <div class="card-body">
+      <h3>সরিষার তেল</h3>
+      <p class="desc">ঘানি ভাঙা খাঁটি সরিষার তেল</p>
+      <div class="price">৳১,৪০০<sub>/৫ কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="8">
+    <span class="card-num">০৮</span>
+    <div class="card-img-wrap">
+      <img src="olive-oil.jpg" alt="অলিভ অয়েল">
+    </div>
+    <div class="card-body">
+      <h3>অলিভ অয়েল</h3>
+      <p class="desc">প্রিমিয়াম এক্সট্রা ভার্জিন অলিভ অয়েল</p>
+      <div class="price">৳২,৫০০<sub>/কেজি</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="9">
+    <span class="card-num">০৯</span>
+    <span class="combo-badge">🎁 কম্বো</span>
+    <div class="card-img-wrap">
+      <img src="combo-sundarban-blackseed.jpg" alt="কম্বো প্যাক ১">
+    </div>
+    <div class="card-body">
+      <h3>কম্বো প্যাক ১</h3>
+      <p class="combo-includes">🌳 সুন্দরবনের মধু (১ কেজি)<br>🖤 কালোজিরা ফুলের মধু (১ কেজি)</p>
+      <p class="combo-savings">💰 সাশ্রয় ৳৩০০ (আলাদায় ৳৩,৩০০)</p>
+      <div class="price">৳৩,০০০<sub>/প্যাক</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="10">
+    <span class="card-num">১০</span>
+    <span class="combo-badge">🎁 কম্বো</span>
+    <div class="card-img-wrap">
+      <img src="combo-blackseed-chia.jpg" alt="কম্বো প্যাক ২">
+    </div>
+    <div class="card-body">
+      <h3>কম্বো প্যাক ২</h3>
+      <p class="combo-includes">🖤 কালোজিরা ফুলের মধু (১ কেজি)<br>🌱 চিয়া সিড (১ কেজি)</p>
+      <p class="combo-savings">💰 সাশ্রয় ৳১,১০০ (আলাদায় ৳২,৭০০)</p>
+      <div class="price">৳১,৬০০<sub>/প্যাক</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+  <div class="card" data-id="11">
+    <span class="card-num">১১</span>
+    <div class="card-img-wrap">
+      <img src="mango.jpg" alt="আম">
+    </div>
+    <div class="card-body">
+      <h3>আম</h3>
+      <p class="desc">তাজা ও মিষ্টি দেশীয় আম</p>
+      <div class="price">৳৩,৫০০<sub>/ক্রেট</sub></div>
+      <div class="qty-control"><button class="qty-btn minus-btn" disabled>−</button><span class="qty-num">০</span><button class="qty-btn plus-btn">+</button></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p class="footer-brand">Jobayer Mart</p>
+  <p>📍 অর্ডার করুন WhatsApp বা ফোনে · দ্রুত ডেলিভারি</p>
+  <br>
+  <p>© ২০২৫ Jobayer Mart · সকল অধিকার সংরক্ষিত</p>
+</footer>
+
+<!-- FLOATING CART -->
+<button class="cart-fab" id="cartFab" onclick="openCart()">
+  <span class="fab-icon">🛒</span>
+  <span>কার্ট</span>
+  <span class="cart-badge" id="cartBadge">০</span>
+  <span class="cart-total-fab" id="cartTotalFab">৳০</span>
+</button>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-header">
+    <div class="drawer-title" id="drawerTitle">🛒 আপনার কার্ট</div>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+
+  <!-- VIEW 1: CART -->
+  <div class="drawer-view active" id="viewCart">
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <span class="empty-icon">🛒</span>
+        <p>কার্ট এখন খালি আছে</p>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <div class="total-row">
+        <span class="total-label">মোট মূল্য</span>
+        <div class="total-amount">৳<span id="grandTotal">০</span></div>
+      </div>
+      <button class="primary-btn" onclick="goToCheckout()">চেকআউট করুন &nbsp;→</button>
+    </div>
+  </div>
+
+  <!-- VIEW 2: CHECKOUT -->
+  <div class="drawer-view" id="viewCheckout">
+    <div class="checkout-body">
+      <div class="order-summary">
+        <div class="order-summary-title">📦 অর্ডার সারসংক্ষেপ</div>
+        <div id="summaryItems"></div>
+        <div class="summary-total">
+          <span>মোট</span>
+          <span>৳<span id="summaryTotal">০</span></span>
+        </div>
+      </div>
+      <div class="form-title">📝 আপনার তথ্য দিন</div>
+      <div class="field">
+        <label>👤 নাম<span>*</span></label>
+        <input type="text" id="fName" placeholder="আপনার পুরো নাম লিখুন">
+        <div class="err-msg" id="errName">নাম দেওয়া আবশ্যক।</div>
+      </div>
+      <div class="field">
+        <label>📍 ঠিকানা<span>*</span></label>
+        <textarea id="fAddress" placeholder="বিস্তারিত ঠিকানা লিখুন (গ্রাম/থানা/জেলা)"></textarea>
+        <div class="err-msg" id="errAddress">ঠিকানা দেওয়া আবশ্যক।</div>
+      </div>
+      <div class="field">
+        <label>📞 ফোন নম্বর<span>*</span></label>
+        <input type="tel" id="fPhone" placeholder="01XXXXXXXXX">
+        <div class="err-msg" id="errPhone">সঠিক ফোন নম্বর দিন।</div>
+      </div>
+      <div class="field">
+        <label>✉️ ইমেইল<span>*</span></label>
+        <input type="email" id="fEmail" placeholder="example@gmail.com">
+        <div class="err-msg" id="errEmail">সঠিক ইমেইল ঠিকানা দিন।</div>
+      </div>
+    </div>
+    <div class="checkout-footer">
+      <button class="back-btn" onclick="goToCart()">← কার্টে ফিরে যাও</button>
+      <button class="whatsapp-btn" onclick="submitOrder()">
+        <span>💬</span> WhatsApp-এ অর্ডার পাঠান
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const products = {
+  1:{name:'সুন্দরবনের মধু',          price:1800,unit:'কেজি',   img:'honey-sundarban.jpg'},
+  2:{name:'কালোজিরা ফুলের মধু',     price:1500,unit:'কেজি',   img:'honey-blackseed.jpg'},
+  3:{name:'লিচু ফুলের মধু',           price:1200,unit:'কেজি',   img:'honey-litchi.jpg'},
+  4:{name:'পাবনার দানাদার গাওয়া ঘি',price:1600,unit:'কেজি',   img:'ghee-pabna.jpg'},
+  5:{name:'চিয়া সিড',                 price:1200,unit:'কেজি',   img:'chia-seed.jpg'},
+  6:{name:'নারিকেল তেল',              price:1300,unit:'কেজি',   img:'coconut-oil.jpg'},
+  7:{name:'সরিষার তেল',               price:1400,unit:'৫ কেজি', img:'mustard-oil.jpg'},
+  8:{name:'অলিভ অয়েল',              price:2500,unit:'কেজি',   img:'olive-oil.jpg'},
+  9:{name:'কম্বো প্যাক ১ (সুন্দরবন + কালোজিরা)', price:3000,unit:'প্যাক', img:'combo-sundarban-blackseed.jpg'},
+  10:{name:'কম্বো প্যাক ২ (কালোজিরা + চিয়া সিড)', price:1600,unit:'প্যাক', img:'combo-blackseed-chia.jpg'},
+  11:{name:'আম',                       price:3500,unit:'ক্রেট',  img:'mango.jpg'},
+};
+
+const cart={};
+const BN  = n=>n.toString().replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const FMT = n=>n.toLocaleString('en-IN');
+
+// ── CARD QTY ──
+document.querySelectorAll('.card').forEach(card=>{
+  const id   =+card.dataset.id;
+  const plus =card.querySelector('.plus-btn');
+  const minus=card.querySelector('.minus-btn');
+  const num  =card.querySelector('.qty-num');
+  plus.addEventListener('click',()=>{ cart[id]=(cart[id]||0)+1; syncCard(card,id,num,minus); });
+  minus.addEventListener('click',()=>{ if(!cart[id])return; cart[id]--; if(cart[id]===0)delete cart[id]; syncCard(card,id,num,minus); });
+});
+
+function syncCard(card,id,numEl,minusBtn){
+  const qty=cart[id]||0;
+  numEl.textContent=BN(qty);
+  minusBtn.disabled=qty===0;
+  card.classList.toggle('in-cart',qty>0);
+  updateFab();
+  const badge=document.getElementById('cartBadge');
+  badge.classList.remove('pop'); void badge.offsetWidth; badge.classList.add('pop');
+  if(document.getElementById('cartDrawer').classList.contains('open')) renderCartItems();
+}
+
+function updateFab(){
+  const total=Object.values(cart).reduce((a,b)=>a+b,0);
+  document.getElementById('cartBadge').textContent=BN(total);
+  document.getElementById('cartTotalFab').textContent='৳'+FMT(calcTotal());
+  document.getElementById('cartFab').classList.toggle('visible',total>0);
+}
+function calcTotal(){ return Object.entries(cart).reduce((s,[id,q])=>s+products[id].price*q,0); }
+
+function openCart(){
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  showView('cart'); renderCartItems();
+}
+function closeCart(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function showView(v){
+  document.getElementById('viewCart').classList.toggle('active',v==='cart');
+  document.getElementById('viewCheckout').classList.toggle('active',v==='checkout');
+  document.getElementById('drawerTitle').textContent=v==='cart'?'🛒 আপনার কার্ট':'📋 চেকআউট';
+}
+function goToCheckout(){ showView('checkout'); renderSummary(); clearErrors(); }
+function goToCart()    { showView('cart'); }
+
+function renderCartItems(){
+  const box=document.getElementById('cartItems');
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  if(!entries.length){
+    box.innerHTML=`<div class="cart-empty"><span class="empty-icon">🛒</span><p>কার্ট এখন খালি আছে</p></div>`;
+    document.getElementById('grandTotal').textContent='০';
+    return;
+  }
+  box.innerHTML=entries.map(([id,qty])=>{
+    const p=products[id],sub=p.price*qty;
+    return `<div class="cart-item">
+      <img class="item-thumb" src="${p.img}" alt="${p.name}">
+      <div class="item-info">
+        <div class="item-name">${p.name}</div>
+        <div class="item-unit-price">৳${FMT(p.price)} / ${p.unit}</div>
+      </div>
+      <div class="item-right">
+        <span class="item-subtotal">৳${FMT(sub)}</span>
+        <div class="item-qty">
+          <button class="qty-btn ${qty===1?'del-btn':''}" onclick="drawerChange(${id},-1)">${qty===1?'🗑':'−'}</button>
+          <span class="qty-num">${BN(qty)}</span>
+          <button class="qty-btn" onclick="drawerChange(${id},1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('grandTotal').textContent=FMT(calcTotal());
+}
+
+function drawerChange(id,delta){
+  cart[id]=(cart[id]||0)+delta;
+  if(cart[id]<=0)delete cart[id];
+  const card=document.querySelector(`.card[data-id="${id}"]`);
+  if(card){
+    const numEl=card.querySelector('.qty-num'),minus=card.querySelector('.minus-btn');
+    const qty=cart[id]||0;
+    numEl.textContent=BN(qty); minus.disabled=qty===0;
+    card.classList.toggle('in-cart',qty>0);
+  }
+  updateFab(); renderCartItems();
+}
+
+function renderSummary(){
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  document.getElementById('summaryItems').innerHTML=entries.map(([id,qty])=>{
+    const p=products[id];
+    return `<div class="summary-item"><span>${p.name} × ${qty} ${p.unit}</span><span>৳${FMT(p.price*qty)}</span></div>`;
+  }).join('');
+  document.getElementById('summaryTotal').textContent=FMT(calcTotal());
+}
+
+function clearErrors(){
+  ['Name','Address','Phone','Email'].forEach(f=>{
+    document.getElementById('f'+f).classList.remove('error');
+    document.getElementById('err'+f).classList.remove('show');
+  });
+}
+
+function validate(){
+  let ok=true;
+  clearErrors();
+  const name   =document.getElementById('fName').value.trim();
+  const address=document.getElementById('fAddress').value.trim();
+  const phone  =document.getElementById('fPhone').value.trim();
+  const email  =document.getElementById('fEmail').value.trim();
+  if(!name){document.getElementById('fName').classList.add('error');document.getElementById('errName').classList.add('show');ok=false;}
+  if(!address){document.getElementById('fAddress').classList.add('error');document.getElementById('errAddress').classList.add('show');ok=false;}
+  if(!phone||!/^01[0-9]{9}$/.test(phone)){document.getElementById('fPhone').classList.add('error');document.getElementById('errPhone').classList.add('show');ok=false;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('fEmail').classList.add('error');document.getElementById('errEmail').classList.add('show');ok=false;}
+  return ok;
+}
+
+function submitOrder(){
+  if(!validate())return;
+  const name   =document.getElementById('fName').value.trim();
+  const address=document.getElementById('fAddress').value.trim();
+  const phone  =document.getElementById('fPhone').value.trim();
+  const email  =document.getElementById('fEmail').value.trim();
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  const total  =calcTotal();
+  let msg='🛒 *নতুন অর্ডার — Jobayer Mart*\n';
+  msg+='━━━━━━━━━━━━━━━━\n';
+  entries.forEach(([id,qty],i)=>{
+    const p=products[id];
+    msg+=`${i+1}. ${p.name}\n`;
+    msg+=`   ${qty} ${p.unit} × ৳${FMT(p.price)} = ৳${FMT(p.price*qty)}\n`;
+  });
+  msg+='━━━━━━━━━━━━━━━━\n';
+  msg+=`💰 *মোট: ৳${FMT(total)}*\n\n`;
+  msg+='👤 *গ্রাহকের তথ্য:*\n';
+  msg+=`নাম: ${name}\n`;
+  msg+=`ঠিকানা: ${address}\n`;
+  msg+=`ফোন: ${phone}\n`;
+  msg+=`ইমেইল: ${email}\n`;
+  window.open(`https://wa.me/8801715707316?text=${encodeURIComponent(msg)},'_blank'`);
+}
+</script>
+</body>
+</html>
